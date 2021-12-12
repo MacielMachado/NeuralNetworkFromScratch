@@ -11,7 +11,8 @@ class activations():
         return 1/(1+np.power(np.e,-z))
     def relu(self,z):
         return z*(z>0)
-
+    def tanh(self,z):
+        return np.tanh(z)
 
 class activations_derivative(activations):
     def __init__(self):
@@ -20,3 +21,5 @@ class activations_derivative(activations):
         return activations().sigmoid(z)*(1-activations().sigmoid(z))
     def relu_derivative(self,z):
         return 1.*(z>0)
+    def tanh_derivative(self,z):
+        return 1 - np.power(activations().tanh(z),2)
