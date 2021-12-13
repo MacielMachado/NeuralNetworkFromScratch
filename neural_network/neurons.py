@@ -4,6 +4,22 @@ class neuron_builder():
     def __init__():
         pass
 
+class cost_functions():
+    def __init__(self):
+        pass
+    def mean_absolute_error(self,y,y_hat):
+        return np.mean(np.abs(y-y_hat))
+    def mean_squared_error(self,y,y_hat):
+        return np.mean(np.power(y-y_hat,2))/2
+
+class cost_functions_derivative():
+    def __init__():
+        pass
+    def mean_absolute_error_derivative(self,y,y_hat):
+        return np.where(y_hat>y,1,-1)/len(y)
+    def mean_squared_error_derivative(self,y,y_hat):
+        return -(y-y_hat)/len(y)
+
 class activations():
     def __init__(self):
         pass

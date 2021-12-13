@@ -1,7 +1,6 @@
 import pytest
 import numpy as np
-from neural_network.neurons import activations, activations_derivative
-
+from neural_network.neurons import activations, activations_derivative, cost_functions
 
 def test_activations_sigmoid_0():
     assert activations().sigmoid(0) == 0.5
@@ -50,4 +49,18 @@ def test_activations_derivative_tanh_10000000():
 
 def test_activations_derivative_tanh_m10000000():
     assert activations_derivative().tanh_derivative(-10000000) == 0
+
+def test_mean_absolute_error_0():
+    assert cost_functions().mean_absolute_error(y=np.array([1,1,1]),y_hat=np.array([1,1,1])) == 0
+
+def test_mean_absolute_error_non_0():
+    assert cost_functions().mean_absolute_error(y=np.array([1,0,5]),y_hat=np.array([0.3,100,-34])) == 139.7/3
+
+def test_mean_squared_error_0():
+    assert cost_functions().mean_squared_error(y=np.array([1,1,1]),y_hat=np.array([1,1,1])) == 0
+
+def test_mean_squared_error_non_0():
+    assert cost_functions().mean_squared_error(y=np.array([1,0,5]),y_hat=np.array([0.3,100,-34])) == 11521.49/6
+
+
 
