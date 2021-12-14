@@ -11,6 +11,8 @@ class cost_functions():
         return np.mean(np.abs(y-y_hat))
     def mean_squared_error(self,y,y_hat):
         return np.mean(np.power(y-y_hat,2))/2
+    def cross_entropy(self,y,y_hat):
+        return -np.mean(y*np.log(y_hat) + (1-y)*np.log(1-y_hat))
 
 class cost_functions_derivative():
     def __init__():
@@ -19,6 +21,8 @@ class cost_functions_derivative():
         return np.where(y_hat>y,1,-1)/len(y)
     def mean_squared_error_derivative(self,y,y_hat):
         return -(y-y_hat)/len(y)
+    def cross_entropy_derivative(self,y,y_hat):
+        return (-y/y_hat + (1-y)/(1-y_hat))/len(y)
 
 class activations():
     def __init__(self):
