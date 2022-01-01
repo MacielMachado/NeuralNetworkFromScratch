@@ -15,7 +15,7 @@ class cost_functions():
         return -np.mean(y*np.log(y_hat) + (1-y)*np.log(1-y_hat))
 
 class cost_functions_derivative():
-    def __init__():
+    def __init__(self):
         pass
     def mean_absolute_error_derivative(self,y,y_hat):
         return np.where(y_hat>y,1,-1)/len(y)
@@ -37,7 +37,7 @@ class activations():
 class activations_derivative(activations):
     def __init__(self):
         pass
-    def sigmoid__derivative(self,z):
+    def sigmoid_derivative(self,z):
         return activations().sigmoid(z)*(1-activations().sigmoid(z))
     def relu_derivative(self,z):
         return 1.*(z>0)
