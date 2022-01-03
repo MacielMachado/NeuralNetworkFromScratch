@@ -1,6 +1,7 @@
 import numpy as np
+from activation_and_cost_funcs import ActivationFunctions, CostFunctions
 
-class LayerConstructor():
+class LayerConstructor(CostFunctions):
   def __init__(self,input_shape,output_shape,activation):
     self.weights = np.random.randn(output_shape,input_shape)
     self.bias = np.random.randn(1,output_shape)
@@ -15,13 +16,13 @@ class LayerConstructor():
     self.z = np.dot(self.input, self.weights.T) + self.bias
 
   def calculate_activation(self):
-      self.a = self.activation(self.z)
+      self.a = ActivationFunctions().get_activation(self.activation, self.z)
 
 class NeuralNetworkConstructor():
   def __init__(self):
     self.layers = []
 
-  def compile(self,cost_func=mse,learning_rate=1e-3):
+  def compile(self,cost_func='mse',learning_rate=1e-3):
     self.cost_func = cost_func
     self.learning_rate = learning_rate
 
@@ -35,7 +36,9 @@ class NeuralNetworkConstructor():
       y_hat = self.feedforward(X)
       self.backpropagation(y,y_hat)
       if epoch % verbose == 0:
-        loss_train = self.cost_func(y, self.predict(x))
+        cost = CostFunctions()    
+        # loss_train = self.cost_func(y, self.predict(X))
+        loss_train = cost.get_cost(self.cost_func, y, self.predict(X))
         print(f'Epoch: {epoch}/{epochs} loss: {loss_train:.8f}')
 
   def predict(self, x):
@@ -51,9 +54,13 @@ class NeuralNetworkConstructor():
     return self.layers[-1].a
   
   def backpropagation(self, y, y_pred):
-    delta = self.cost_func(y,y_pred,derivative=True)
+    activation = ActivationFunctions()
+    cost = CostFunctions()
+    delta = cost.get_cost(self.cost_func, y, y_pred, derivative=True)
     for layer in reversed(self.layers):
-      da_dz = layer.activation(layer.z, derivative=True)*delta
+      activation = ActivationFunctions()
+      cost = CostFunctions()
+      da_dz = activation.get_activation(layer.activation, layer.z, True) * delta
       delta = np.dot(da_dz, layer.weights)
       layer.dz_dw = np.dot(da_dz.T, layer.input)
       layer.dz_db = da_dz.sum(axis = 0,keepdims=True)
