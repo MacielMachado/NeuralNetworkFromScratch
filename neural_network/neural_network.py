@@ -34,6 +34,7 @@ def cross_entropy(y,y_hat,derivative=False):
 # Implementation
 class LayerConstructor():
   def __init__(self,input_shape,output_shape,activation):
+    np.random.seed(42)
     self.weights = np.random.randn(output_shape,input_shape)
     self.bias = np.random.randn(1,output_shape)
     self.activation = activation

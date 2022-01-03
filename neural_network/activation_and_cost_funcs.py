@@ -6,13 +6,13 @@ class ActivationFunctions():
 
     def get_activation(self, activation_function, z, derivative = False):
         if activation_function == 'linear':
-            return self.linear(z, derivative=False)
+            return self.linear(z, derivative)
         elif activation_function == 'sigmoid':
-            return self.sigmoid(z, derivative=False)
+            return self.sigmoid(z, derivative)
         elif activation_function == 'tanh':
-            return self.tanh(z, derivative=False)
+            return self.tanh(z, derivative)
         elif activation_function == 'relu':
-            return self.relu(z, derivative=False)
+            return self.relu(z, derivative)
 
     def linear(self, z, derivative=False):
         if derivative: return np.ones_like(z)  
