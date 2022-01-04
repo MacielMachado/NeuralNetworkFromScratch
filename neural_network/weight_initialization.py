@@ -1,4 +1,3 @@
-from _typeshed import IdentityFunction
 import numpy as np
 
 class WeightInializator():
@@ -25,10 +24,14 @@ class WeightInializator():
         return np.random.normal(size = (output_shape, input_shape))
 
     def glorot_uniform_initializator(self, output_shape, input_shape):
-        return
+        sigma = np.sqrt(6 / (output_shape + input_shape))
+        return 2*sigma*np.random.uniform(size = (output_shape, input_shape)) \
+               - sigma
 
     def glorot_normal_initializator(pself, output_shape, input_shape):
-        return
+        mu = 0
+        sigma = np.sqrt(2 / (output_shape + input_shape))
+        return sigma*np.random.normal(size = (output_shape, input_shape)) + mu
 
     def ones_initializator(pself, output_shape, input_shape):
         return np.ones((output_shape, input_shape))
