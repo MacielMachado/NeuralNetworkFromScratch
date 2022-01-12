@@ -1,11 +1,17 @@
 import numpy as np
 from activation_and_cost_funcs import ActivationFunctions, CostFunctions
+from weight_initialization import WeightInializator
 
 class LayerConstructor(CostFunctions):
-  def __init__(self,input_shape,output_shape,activation):
+  def __init__(self,input_shape,output_shape,activation,
+               weight_initialization='glorot_uniform',
+               bias_initialization='ones'):
     np.random.seed(42)
-    self.weights = np.random.randn(output_shape,input_shape)
+    self.weights = WeightInializator().initializate(weight_initialization,
+                                                    output_shape, input_shape)
     self.bias = np.random.randn(1,output_shape)
+    self.bias = WeightInializator().initializate(bias_initialization,
+                                                 1,output_shape)
     self.activation = activation
     self.a = None
     self.da_dz = None
@@ -27,10 +33,14 @@ class NeuralNetworkConstructor():
     self.cost_func = cost_func
     self.learning_rate = learning_rate
 
-  def add_layer(self,input_shape,output_shape,activation):
+  def add_layer(self,input_shape,output_shape,activation,
+                weight_initialization = 'glorot_uniform',
+                bias_initialization = 'ones'):
     self.layers.append(LayerConstructor(input_shape=input_shape,
                                         output_shape=output_shape,
-                                        activation=activation))
+                                        activation=activation,
+                                        weight_initialization=weight_initialization,
+                                        bias_initialization=bias_initialization))
 
   def fit(self, X, y, epochs=100, verbose=10):
     for epoch in range(epochs + 1):

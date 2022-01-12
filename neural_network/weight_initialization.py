@@ -3,19 +3,19 @@ import numpy as np
 class WeightInializator():
     def __init__(self):
         pass
-    def initializate_weight(self, inializator):
+    def initializate(self, inializator, output_shape, input_shape):
         if inializator == 'random_uniform':
-            pass
+            return self.random_uniform_initializator(output_shape, input_shape)
         elif inializator == 'random_normal':
-            pass
+            return self.random_normal_initializator(output_shape, input_shape)
         elif inializator == 'glorot_uniform':
-            pass
+            return self.glorot_uniform_initializator(output_shape, input_shape)
         elif inializator == 'glorot_normal':
-            pass
+            return self.glorot_normal_initializator(output_shape, input_shape)
         elif inializator == 'ones':
-            pass
+            return self.ones_initializator(output_shape, input_shape)
         elif inializator == 'zeros':
-            pass
+            return self.zeros_initializator(output_shape, input_shape)
 
     def random_uniform_initializator(self, output_shape, input_shape):
         return np.random.uniform(size = (output_shape, input_shape))
