@@ -21,15 +21,20 @@ plt.waitforbuttonpress()
 input_shape, output_shape = x.shape[1], y.shape[1]
 nn = NeuralNetworkConstructor()
 nn.add_layer(input_shape=input_shape, output_shape=8,activation='relu',
-             weight_initialization='glorot_uniform',bias_initialization='ones')
+             weight_initialization='glorot_uniform',bias_initialization='ones',
+             dropout_probability=0.0)
 nn.add_layer(input_shape=8, output_shape=8,activation='relu',
-             weight_initialization='glorot_uniform',bias_initialization='ones')
+             weight_initialization='glorot_uniform',bias_initialization='ones',
+             dropout_probability=0.0)
 nn.add_layer(input_shape=8, output_shape=8,activation='relu',
-             weight_initialization='glorot_uniform',bias_initialization='ones')
+             weight_initialization='glorot_uniform',bias_initialization='ones',
+             dropout_probability=0.0)
 nn.add_layer(input_shape=8, output_shape=4,activation='relu',
-             weight_initialization='glorot_uniform',bias_initialization='ones')
+             weight_initialization='glorot_uniform',bias_initialization='ones',
+             dropout_probability=0.0)
 nn.add_layer(input_shape=4, output_shape=output_shape,activation='sigmoid',
-             weight_initialization='glorot_uniform',bias_initialization='ones')
+             weight_initialization='glorot_uniform',bias_initialization='ones',
+             dropout_probability=0.0)
 nn.compile(cost_func='cross_entropy',learning_rate=1e-2)
 nn.fit(x,y,epochs=5000,verbose=100)
 print('Hi')

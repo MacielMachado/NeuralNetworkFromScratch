@@ -5,7 +5,8 @@ from weight_initialization import WeightInializator
 class LayerConstructor(CostFunctions):
   def __init__(self,input_shape,output_shape,activation,
                weight_initialization='glorot_uniform',
-               bias_initialization='ones'):
+               bias_initialization='ones',
+               dropout_probabiility=0.0):
     np.random.seed(42)
     self.weights = WeightInializator().initializate(weight_initialization,
                                                     output_shape, input_shape)
@@ -18,12 +19,21 @@ class LayerConstructor(CostFunctions):
     self.delta = None
     self.dz_dw = None
     self.dz_db = None
+    self.dropout_probability = dropout_probabiility
+    self.dropout_mask = None
+    self.training = True
 
   def calculate_z(self):
     self.z = np.dot(self.input, self.weights.T) + self.bias
 
   def calculate_activation(self):
-      self.a = ActivationFunctions().get_activation(self.activation, self.z)
+      activation = ActivationFunctions().get_activation(self.activation, self.z)
+      self.create_dropout_mask()
+      self.a = activation * (self.dropout_mask if self.training else 1.0)
+
+  def create_dropout_mask(self):
+    self.dropout_mask = np.random.binomial(1, 1.0-self.dropout_probability, 
+                                           self.z.shape)/(1.0-self.dropout_probability)
 
 class NeuralNetworkConstructor():
   def __init__(self):
@@ -35,12 +45,13 @@ class NeuralNetworkConstructor():
 
   def add_layer(self,input_shape,output_shape,activation,
                 weight_initialization = 'glorot_uniform',
-                bias_initialization = 'ones'):
+                bias_initialization = 'ones', dropout_probability = 0.0):
     self.layers.append(LayerConstructor(input_shape=input_shape,
                                         output_shape=output_shape,
                                         activation=activation,
                                         weight_initialization=weight_initialization,
-                                        bias_initialization=bias_initialization))
+                                        bias_initialization=bias_initialization,
+                                        dropout_probabiility=dropout_probability))
 
   def fit(self, X, y, epochs=100, verbose=10):
     for epoch in range(epochs + 1):
@@ -53,15 +64,15 @@ class NeuralNetworkConstructor():
         print(f'Epoch: {epoch}/{epochs} loss: {loss_train:.8f}')
 
   def predict(self, x):
-    return self.feedforward(x)
+    return self.feedforward(x, training=False)
 
-  def feedforward(self, x):
+  def feedforward(self, x, training=True):
     self.layers[0].input = x
     for count,layer in enumerate(self.layers):
+      layer.training = training
       layer.calculate_z()
       layer.calculate_activation()
-      if count != len(self.layers)-1: 
-          self.layers[count+1].input = layer.a
+      if count != len(self.layers)-1: self.layers[count+1].input = layer.a
     return self.layers[-1].a
   
   def backpropagation(self, y, y_pred):
@@ -71,7 +82,8 @@ class NeuralNetworkConstructor():
     for layer in reversed(self.layers):
       activation = ActivationFunctions()
       cost = CostFunctions()
-      da_dz = activation.get_activation(layer.activation, layer.z, True) * delta
+      da_dz = activation.get_activation(layer.activation, layer.z, True) * \
+              delta * layer.dropout_mask
       delta = np.dot(da_dz, layer.weights)
       layer.dz_dw = np.dot(da_dz.T, layer.input)
       layer.dz_db = da_dz.sum(axis = 0,keepdims=True)
